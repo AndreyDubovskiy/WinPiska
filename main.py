@@ -1,5 +1,25 @@
 
 print("-------- WinPiska --------")
+
+def rle_decode(data):
+    encoding = bytes()
+    is_byte = False
+    prev_char = None
+    for char in data:
+        if char == b'\0':
+            is_byte = True
+        elif is_byte:
+            if prev_char == None:
+                prev_char = char
+            else:
+                count = int(char)
+                for _ in range(count):
+                    encoding += bytes([char])
+                prev_char = None
+                is_byte = False
+        else:
+            encoding += bytes([char])
+    return encoding
 def rle_encode(data):
     encoding = bytes()
     prev_char = data[0]
