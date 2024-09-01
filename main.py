@@ -76,3 +76,12 @@ with open("output.pipiska", "wb") as file:
 
 persent_compress = round((size2/size1)*100, 2)
 print(f"COMPRESS = {100 - persent_compress} %")
+
+
+with open("output.pipiska", "rb") as file:
+    data = file.read()
+    size1 = len(data)
+    print("SIZE", file.name, len(data))
+
+data = rle_decode(data)
+
