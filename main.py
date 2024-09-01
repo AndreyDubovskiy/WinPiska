@@ -1,28 +1,37 @@
 
 print("-------- WinPiska --------")
 def rle_encode(data):
-    encoding = bytearray()
+    encoding = bytes()
     prev_char = data[0]
     count = 1
-
     for char in data[1:]:
         if char == prev_char:
             count += 1
-            if count == 255:  # максимальное значение для байта
-                encoding.extend([count, prev_char])
+            if count == 255:
+                encoding += b'\0'
+                encoding += bytes(prev_char)
+                encoding += bytes(count)
                 count = 0
         else:
             if count > 10:
-                print("SSSSS", count)
-            if count > 0:
-                encoding.extend([count, prev_char])
+                encoding += b'\0'
+                encoding += bytes(prev_char)
+                encoding += bytes(count)
+            else:
+                for _ in range(count):
+                    encoding += bytes(prev_char)
             prev_char = char
-            count = 1
-
-    # Обработка последней серии символов
+            count = 0
     if count > 0:
-        encoding.extend([count, prev_char])
-
+        if count > 10:
+            encoding += b'\0'
+            encoding += bytes(prev_char)
+            encoding += bytes(count)
+        else:
+            for _ in range(count):
+                encoding += bytes(prev_char)
+    else:
+        encoding += bytes(prev_char)
     return encoding
 
 
@@ -36,7 +45,7 @@ with open("1.jpg", "rb") as file:
     print("SIZE", file.name, len(data))
 
 
-rle_encode(data)
+data = rle_encode(data)
 
 
 
